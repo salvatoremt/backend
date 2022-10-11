@@ -26,5 +26,5 @@ const deleteMessage = (req = request, res = response) => {
         byeMessage, 
         postMessage, 
         putMessage, 
-        deleteMessage
+        deleteMessage 
     } 
