@@ -5,5 +5,5 @@ const config ={
     user: process.env.DB_USER,
     password: process.env.DB_NAME,
     database: process.env.DB_PORT,
-    connectionlimit: process.env.DB_CONN_LIMIT
+    connectionlimit: process.env.DB_CONN_LIMIT 
 }

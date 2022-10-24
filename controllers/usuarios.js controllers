@@ -1,0 +1,26 @@
+const {request, response } = require("express")
+const pool = require("")
+
+
+const getUsers = async (req = request, res = response) => {
+    let conn;
+ try {
+    conn = await pool.get.Connection()
+
+    const users = await conn.query("SELECT * FROM Usuarios", (error) =>)
+ }
+
+
+
+
+
+}
+
+
+
+
+
+
+
+
+
