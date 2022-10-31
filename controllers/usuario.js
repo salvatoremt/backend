@@ -106,10 +106,10 @@ const addUser = async(req = request, res = response) => {
         conn = await pool.getConnection()
         const [affectedRows]= await conn.query(`
         INSERT INTO USUARIOS _(
-            nombre,
-            apellidos,
-            edad,
-            genero,
+            nombre, ${nombre|| user.Nombre}',
+            apellidos, '${apellidos|| user.apellidos}',
+            edad,     ${edad    || user. edad},
+            genero,   '${genero || user.genero}',
             usuario
             contraseña,
             fecha_Nacimiento,
@@ -140,4 +140,100 @@ const addUser = async(req = request, res = response) => {
         conn.end() 
     }
 }
+
+const signIn= async(req = request, res = response) => {
+    const {
+        nombre,
+        apellidos,
+        edad,
+        genero,
+        usuario,
+        contraseña,
+        fecha_Nacimiento= 1998-04-23
+        Activo
+    }= req.body
+
+    if (
+        !Nombre ||
+    )
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ const signIn = async ( req = request, res = response) => {
+    const {
+        usuario,
+        contraseña,
+    } = req.body
+
+    if(
+    !usuario||
+    !contraseña 
+  ) {
+    res.status(400).json({msg:"falta informacion del usuario"})
+    return
+  }
+
+  let conn;
+
+
+
+
+ }
+
+
+
 module.exports = {getUsers, getUserByID, deleteUserByID, addUser}
