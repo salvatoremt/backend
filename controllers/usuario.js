@@ -106,23 +106,17 @@ const addUser = async(req = request, res = response) => {
         conn = await pool.getConnection()
         const [affectedRows]= await conn.query(`
         INSERT INTO USUARIOS _(
-            nombre, ${nombre|| user.Nombre}',
-            apellidos, '${apellidos|| user.apellidos}',
-            edad,     ${edad    || user. edad},
-            genero,   '${genero || user.genero}',
-            usuario
-            contraseña,
+            nombre, 
+            apellidos,
+            edad,    
+            genero,   
+            usuario,
+            contraseñaCifrada,
             fecha_Nacimiento,
             Activo
+
         ) VALUES (
-            '${nombre}',
-            '${apellidos}',
-             ${edad},
-            '${genero}',
-            '${usuario}',
-            '${contraseña}',
-            '${fecha_Nacimiento}',
-            '${Activo}',
+            
         )
         `, (error) => { throw new Error(error) })
 
@@ -228,6 +222,19 @@ const signIn= async(req = request, res = response) => {
   }
 
   let conn;
+
+  try {
+    conn = await pool.getConnection()
+
+    const [user] = await conn.query("SELECT Usuario,contraseña, Activo From Usuario WHERE Usuario = ´${Usuario} ")
+
+
+    if(!user || user.Activo == "N"){
+        let code = !user ? 1: 2;
+        res.status(403).json({msg: 'Él usuario o la contraseña son incorrectas.', errorCode: code})
+        
+    }
+  }
 
 
 
