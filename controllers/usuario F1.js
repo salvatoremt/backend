@@ -1,14 +1,15 @@
 const { request, response } = require("express");
 const bcryptjs = require("bcryptjs")
 const pool = require("../db/connection");
-const modeloUsuarios = require("../models/usuarios");
+const{modeloF1carreras} = require("../models/F1carreras");
 const getUsers = async (req = request, res = response) => {
  let conn;
 
  try {
     conn = await pool.getConnection()
+    // linea 12se modifca
 
-    const users = await conn.query(modeloUsuarios.queryGetUsers, (error) => {throw new Error(error)})
+    const F1 = await conn.query(modeloF1carreras.queryGetUsers, (error) => {throw new Error(error)})
 
     if (!users) {
         res.status(404).json({msg: "no se encontraron registros"})
@@ -24,7 +25,7 @@ const getUsers = async (req = request, res = response) => {
     }
  }
 }
-const getUserByID = async (req = request, res = response) => {
+const getF1ByID = async (req = request, res = response) => {
    const {id} = req.params
    let conn;
   
@@ -75,23 +76,22 @@ const getUserByID = async (req = request, res = response) => {
   
   const addUser = async (req = request, res = response) => {
    const {
-      Usuario,
-      Nombre,
-      Apellidos,
+      F1,
+      Nombre de pilotos,
       Edad,
-      Genero,
-      Contrasena,
-      Fecha_nacimiento = '',
+      victorias,
+      escuderia,
+      podios,
       Activo
    } = req.body
-   if(      
-   !Usuario||                                            
-   !Nombre||
-   !Apellidos||
+   if(                                                  
+   !Nombre de pilotos||
+   !victorias||
    !Edad||
-   !Contrasena||
-   !Activo
-   ){
+   !escuderia||
+   !podios
+   !Activo||
+   ) {
       res.status(400).json({msg: "Falta informacion del usuario"})
       return
    }
@@ -103,7 +103,7 @@ const getUserByID = async (req = request, res = response) => {
       const user = await conn.query(modeloUsuarios.queryuserexist,[Usuario])
 
       if(!user){
-         res.status(403).json({msg: `El Usuario ${Usuario} ya se encuentra registrado`})
+         res.status(403).json({msg: `F1 ${Usuario} ya se encuentra registrado`})
          return
       }
 
@@ -111,23 +111,21 @@ const getUserByID = async (req = request, res = response) => {
       const ContrasenaCifrada = bcryptjs.hashSync(Contrasena, salt)
 
       const affectedRows = await conn.query(modeloUsuarios.queryadduser[
-         Usuario,
-         Nombre,
-         Apellidos,
+         Nombre de pilotos,
+         victorias,
          Edad,
-         Genero || '',
-         ContrasenaCifrada,
-         Fecha_nacimiento,
+         escuderia|| '',
+         podios,
          Activo
       
       ] , (error) => {throw new Error(error)})
       
 
       if (affectedRows === 0) {
-         res.status(404).json({msg: `no se pudo agregar el registro del usuario ${Usuario}`})
+         res.status(404).json({msg: `no se pudo agregar el registro del usuario ${F1}`})
          return
    }
-      res.json({msg: `el usuario ${Usuario} se agreggó correctamente :D`})
+      res.json({msg: `el piloto ${F1} se agreggó correctamente :D`})
       return
    } catch (error) {
       console.log(error)
@@ -141,8 +139,7 @@ const getUserByID = async (req = request, res = response) => {
 
   const updateUserByUsuario = async (req = request, res = response) => {
    const {
-      Usuario,
-      Nombre,
+      Nombre de piloto,
       Apellidos,
       Edad,
       Genero,
@@ -152,18 +149,18 @@ const getUserByID = async (req = request, res = response) => {
    } = req.body
    console.log({Usuario,
       Nombre ,
-      Apellidos,
+      victorias,
       Edad,
-      Genero,
-      Contrasena,
-      Fecha_nacimiento,
+      escuderia,
+      podios,
       Activo})
    if(      
    !Usuario||
    !Nombre||
-   !Apellidos||
-   !Edad||
-   !Contrasena
+   !victorias||
+   !escuderia||
+   Activo
+
    )
    {
       res.status(400).json({msg: "Falta informacion del usuario"})
@@ -180,8 +177,8 @@ const getUserByID = async (req = request, res = response) => {
          res.status(403).json({msg: `El usuario ${Usuario} no se encuentra registrado`})
       }
 
-      const affectedRows = await conn.query(modeloUsuarios.queryupdatebyusuario[
-         Nombre || user.Nombre,
+      const {affectedRows} = await conn.query(modeloUsuarios.queryupdatebyusuario[
+         Nombre|| user.Nombre,
             Apellidos || user.Apellidos,
             Edad || user.Edad,
             Genero || user.Genero,
